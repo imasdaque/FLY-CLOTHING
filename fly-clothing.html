@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>FLY™ — Wear the Air</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var savedTheme = localStorage.getItem('flyTheme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    } catch (error) {
+      document.documentElement.dataset.theme = 'light';
+    }
+  }());
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-accent">✓</span> Added to cart
+</div>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-overlay" id="cartOverlay" data-cart-close></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-title">Your Bag <span class="cart-count" id="cartCount">(0)</span></div>
+    <button class="cart-close" data-cart-close>✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛍</div>
+      <div class="cart-empty-text">Your bag is empty</div>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-total">
+      <div class="cart-total-label">Total</div>
+      <div class="cart-total-price" id="cartTotal">₹0</div>
+    </div>
+    <button class="checkout-btn">Checkout → Pay Now</button>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="product-modal-overlay" id="productModalOverlay" data-product-close></div>
+<aside class="product-modal" id="productModal" aria-hidden="true" aria-labelledby="productModalTitle">
+  <button class="product-modal-close" data-product-close aria-label="Close product details">x</button>
+  <div class="product-modal-content" id="productModalContent"></div>
+</aside>
+
+<!-- WELCOME OFFER POPUP -->
+<div class="offer-overlay" id="offerOverlay" data-offer-close></div>
+<aside class="offer-popup" id="offerPopup" aria-hidden="true" aria-labelledby="offerTitle">
+  <button class="offer-close" data-offer-close aria-label="Close offer">x</button>
+  <div class="offer-media">
+    <img src="assets/offer-popup-web.jpg" alt="">
+  </div>
+  <form class="offer-content" id="offerForm">
+    <div>
+      <h2 class="offer-title" id="offerTitle">Join the family.</h2>
+      <p class="offer-sub">Get 10% off.</p>
+    </div>
+    <input class="offer-input" type="email" name="email" autocomplete="email" placeholder="Enter Your Email" required>
+    <div class="offer-phone-row">
+      <span>IN +91</span>
+      <input class="offer-input" type="tel" name="phone" inputmode="numeric" autocomplete="tel" placeholder="Enter Your Number" required>
+    </div>
+    <button class="offer-submit" type="submit">Get Offer</button>
+  </form>
+</aside>
+
+<!-- ACCOUNT MODAL -->
+<div class="auth-overlay" id="authOverlay" data-auth-close></div>
+<aside class="auth-modal" id="authModal" aria-hidden="true" aria-labelledby="authTitle">
+  <button class="auth-close" data-auth-close aria-label="Close account">x</button>
+  <div class="auth-panel" id="authPanel">
+    <div class="auth-kicker">FLY Account</div>
+    <h2 class="auth-title" id="authTitle">Welcome back</h2>
+    <p class="auth-sub">Sign in or create an account to save your bag, orders, and details on this device.</p>
+
+    <div class="auth-tabs" role="tablist" aria-label="Account forms">
+      <button class="auth-tab active" type="button" data-auth-mode="signin">Sign In</button>
+      <button class="auth-tab" type="button" data-auth-mode="signup">Sign Up</button>
+    </div>
+
+    <form class="auth-form active" id="signinForm" data-auth-form="signin">
+      <label class="auth-field">
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+      </label>
+      <label class="auth-field">
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" placeholder="At least 6 characters" minlength="6" required>
+      </label>
+      <button class="auth-submit" type="submit">Sign In</button>
+      <p class="auth-note">Demo only: use the email you signed up with in this browser.</p>
+    </form>
+
+    <form class="auth-form" id="signupForm" data-auth-form="signup">
+      <label class="auth-field">
+        <span>Name</span>
+        <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
+      </label>
+      <label class="auth-field">
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+      </label>
+      <label class="auth-field">
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required>
+      </label>
+      <button class="auth-submit" type="submit">Create Account</button>
+      <p class="auth-note">Your demo account is saved locally in this browser.</p>
+    </form>
+
+    <div class="account-summary" id="accountSummary" hidden>
+      <div class="account-avatar" id="accountAvatar">F</div>
+      <div class="account-name" id="accountName">Fly Member</div>
+      <div class="account-email" id="accountEmail">member@example.com</div>
+      <div class="account-perks">
+        <span>Saved checkout</span>
+        <span>Order history</span>
+        <span>Early access</span>
+      </div>
+      <button class="auth-submit" type="button" data-auth-signout>Sign Out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">FLY<span>™</span></a>
+  <ul class="nav-links">
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#philosophy">About</a></li>
+    <li><a href="#">Lookbook</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+      <span class="theme-toggle-icon" aria-hidden="true"></span>
+    </button>
+    <button class="account-btn" id="accountButton" data-auth-open>Account</button>
+    <button class="nav-icon" data-cart-open>🛍
+      <span class="cart-badge" id="navBadge">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">SS '26 Collection</div>
+    <h1 class="hero-headline">
+      Dress for<br>
+      <em>the life</em><br>
+      you live.
+    </h1>
+    <p class="hero-sub">Fly is built for everything — the morning run, the meeting, the midnight drive. Effortless fits that move with you.</p>
+    <div class="hero-ctas">
+      <a href="#products" class="btn-primary">Shop Now <span class="arrow">→</span></a>
+      <a href="#collections" class="btn-secondary">View Collections</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">12K+</div>
+        <div class="stat-label">Happy Flyers</div>
+      </div>
+      <div>
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Avg. Rating</div>
+      </div>
+      <div>
+        <div class="stat-num">48h</div>
+        <div class="stat-label">Delivery</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-placeholder">
+      <div class="hero-model-block">
+        <div class="hero-model-inner">FLY</div>
+      </div>
+      <div class="hero-pill">✦ New Drop</div>
+      <div class="hero-scroll"><div class="scroll-line"></div>Scroll</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="reveal">
+    <div class="section-label">Our Story</div>
+    <h2 class="philosophy-headline">Made for real life.<br>Nothing else.</h2>
+    <p class="philosophy-body">We started Fly because we were tired of choosing between looking good and feeling good. Every piece is obsessed over — fabric weight, cut, colour — so you never have to think twice about what to wear.</p>
+    <a href="#" class="btn-primary">Read Our Story <span class="arrow">→</span></a>
+  </div>
+  <div class="reveal reveal-delay-2">
+    <div class="phil-card">
+      <div class="phil-num">01</div>
+      <div class="phil-title">Premium Fabrics</div>
+      <div class="phil-text">Every material is handpicked — supima cotton, brushed French terry, Japanese ripstop. Wear it once and you'll feel the difference.</div>
+    </div>
+    <div class="phil-card phil-card-spaced">
+      <div class="phil-num">02</div>
+      <div class="phil-title">Fits That Work</div>
+      <div class="phil-text">Not too slim, not too boxy. Engineered across 200+ body types to land perfectly on everyone, every time.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products-section" id="products">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">Shop All</div>
+      <h2 class="section-title">Our <span>Bestsellers</span></h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="tees">Tees</button>
+      <button class="filter-tab" data-filter="pants">Pants</button>
+      <button class="filter-tab" data-filter="hoodies">Hoodies</button>
+    </div>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- COLLECTIONS -->
+<section class="collections reveal" id="collections">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Explore</div>
+      <h2 class="section-title">Shop by <span>Category</span></h2>
+    </div>
+  </div>
+  <div class="collections-grid">
+    <div class="collection-card large coll-tees">
+      <div class="collection-bg">
+        <div class="collection-bg-text">TEES</div>
+      </div>
+      <div class="collection-overlay">
+        <div class="collection-tag">Collection</div>
+        <div class="collection-name">The T-Shirt Edit</div>
+        <div class="collection-count">24 styles from ₹899</div>
+      </div>
+    </div>
+    <div class="collection-card coll-pants">
+      <div class="collection-bg">
+        <div class="collection-bg-text">PANTS</div>
+      </div>
+      <div class="collection-overlay">
+        <div class="collection-tag">Collection</div>
+        <div class="collection-name">Everyday Bottoms</div>
+        <div class="collection-count">16 styles from ₹1,299</div>
+      </div>
+    </div>
+    <div class="collection-card coll-hoodies">
+      <div class="collection-bg">
+        <div class="collection-bg-text">LAYER</div>
+      </div>
+      <div class="collection-overlay">
+        <div class="collection-tag">Collection</div>
+        <div class="collection-name">Hoodies & Layers</div>
+        <div class="collection-count">12 styles from ₹1,799</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFESTYLE BANNER -->
+<div class="lifestyle-banner reveal">
+  <div>
+    <div class="lifestyle-label">The Fly Way</div>
+    <h2 class="lifestyle-headline">The coffee run.<br>The work call.<br>The airport.</h2>
+    <p class="lifestyle-body">One wardrobe for every version of your day. Fly moves from dawn to dusk without missing a beat.</p>
+    <a href="#products" class="btn-primary btn-accent">Shop the Look <span class="arrow">→</span></a>
+  </div>
+  <div class="lifestyle-right">
+    <div class="lifestyle-card">
+      <div class="lifestyle-card-icon">🌿</div>
+      <div class="lifestyle-card-title">Sustainable</div>
+      <div class="lifestyle-card-text">Organic cotton, low-impact dyes, responsible packaging.</div>
+    </div>
+    <div class="lifestyle-card">
+      <div class="lifestyle-card-icon">📦</div>
+      <div class="lifestyle-card-title">48h Shipping</div>
+      <div class="lifestyle-card-text">Pan-India delivery in 2 days, guaranteed.</div>
+    </div>
+    <div class="lifestyle-card">
+      <div class="lifestyle-card-icon">↩️</div>
+      <div class="lifestyle-card-title">Easy Returns</div>
+      <div class="lifestyle-card-text">30-day no-questions-asked returns & exchanges.</div>
+    </div>
+    <div class="lifestyle-card">
+      <div class="lifestyle-card-icon">🏷️</div>
+      <div class="lifestyle-card-title">Best Value</div>
+      <div class="lifestyle-card-text">Premium quality at prices that make sense.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials reveal">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Reviews</div>
+      <h2 class="section-title">Flyers <span>Love It</span></h2>
+    </div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"The fabric, fit, and colours feel even better in person. It genuinely feels like these were made for me. I own seven pieces now."</div>
+      <div class="testimonial-author">
+        <div class="author-avatar author-avatar-arjun">A</div>
+        <div>
+          <div class="author-name">Arjun M.</div>
+          <div class="author-tag">Mumbai · Verified Buyer</div>
+        </div>
+      </div>
+      <div class="testimonial-quote">"</div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"I always wondered why nobody made polo t-shirts as soft as crew necks. Fly figured it out. Won't go anywhere else."</div>
+      <div class="testimonial-author">
+        <div class="author-avatar author-avatar-priya">P</div>
+        <div>
+          <div class="author-name">Priya S.</div>
+          <div class="author-tag">Delhi · Verified Buyer</div>
+        </div>
+      </div>
+      <div class="testimonial-quote">"</div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-3">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"These pants just feel right. Looks cool, feels comfortable and I can wear them with literally anything. 10/10."</div>
+      <div class="testimonial-author">
+        <div class="author-avatar author-avatar-rahul">R</div>
+        <div>
+          <div class="author-name">Rahul K.</div>
+          <div class="author-tag">Bengaluru · Verified Buyer</div>
+        </div>
+      </div>
+      <div class="testimonial-quote">"</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<div class="cta-strip reveal">
+  <h2 class="cta-strip-headline">Ready to Fly?</h2>
+  <p class="cta-strip-sub">Free shipping on orders above ₹999 · 30-day returns · Pan-India delivery</p>
+  <a href="#products" class="btn-primary">Shop the Full Range <span class="arrow">→</span></a>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter reveal">
+  <div class="newsletter-left">
+    <div class="newsletter-headline">Stay in the loop.</div>
+    <p class="newsletter-sub">New drops, exclusive offers, and style guides — straight to your inbox. No spam, ever.</p>
+  </div>
+  <div class="newsletter-form">
+    <input class="newsletter-input" type="email" placeholder="your@email.com">
+    <button class="newsletter-submit">Subscribe →</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">FLY<span>™</span></a>
+      <p class="footer-brand-text">Wear the Air. Built for everything — from the coffee run to the work call to Sunday doing nothing.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn">𝕏</a>
+        <a href="#" class="social-btn">▶</a>
+        <a href="#" class="social-btn">◎</a>
+        <a href="#" class="social-btn">in</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Shop</div>
+      <ul class="footer-links">
+        <li><a href="#">T-Shirts</a></li>
+        <li><a href="#">Pants & Joggers</a></li>
+        <li><a href="#">Hoodies</a></li>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Sale</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Help</div>
+      <ul class="footer-links">
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns & Exchanges</a></li>
+        <li><a href="#">FAQs</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Affiliates</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Fly™. All rights reserved.</div>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Black hoodie mockup</title>
+  <desc id="desc">Dummy catalog product image for the Fly Hoodie.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#e8e4dc"/>
+      <stop offset="1" stop-color="#c9c0af"/>
+    </linearGradient>
+    <linearGradient id="hoodie" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#272723"/>
+      <stop offset="1" stop-color="#090909"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="32" stdDeviation="30" flood-color="#000000" flood-opacity=".2"/>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#bg)"/>
+  <rect x="105" y="124" width="690" height="952" rx="48" fill="#ffffff" opacity=".18"/>
+  <g filter="url(#shadow)">
+    <path d="M305 346c55-45 84-66 145-66s90 21 145 66l132 104-94 142-58-39 31 379c4 48-34 89-82 89H376c-48 0-86-41-82-89l31-379-58 39-94-142 132-104z" fill="url(#hoodie)"/>
+    <path d="M345 342c21-97 189-97 210 0 10 48-28 100-105 100s-115-52-105-100z" fill="#151513"/>
+    <path d="M399 418c18 16 84 16 102 0" fill="none" stroke="#4b4b45" stroke-width="15" stroke-linecap="round"/>
+    <path d="M378 682h144c25 0 45 20 45 45v52c0 25-20 45-45 45H378c-25 0-45-20-45-45v-52c0-25 20-45 45-45z" fill="#ffffff" opacity=".07"/>
+    <path d="M426 460v144M474 460v144" stroke="#c8f040" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+  </g>
+</svg>
