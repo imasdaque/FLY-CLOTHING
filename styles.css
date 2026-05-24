@@ -382,9 +382,9 @@
   .hero-model-photo {
     position: absolute;
     left: 50%;
-    bottom: -1%;
+    bottom: -12%;
     width: auto;
-    height: 110%;
+    height: 128%;
     max-width: none;
     display: block;
     transform: translateX(-50%);
